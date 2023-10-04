@@ -1,5 +1,16 @@
 /** @type { import('@storybook/vue3-vite').StorybookConfig } */
-const config = {
+// const config = {
+//   
+// };
+// export default config;
+
+import path from 'path'
+import { loadConfigFromFile, mergeConfig } from 'vite'
+
+/** @type { import('@storybook/vue3-vite').StorybookConfig } */
+export default {
+  
+  // Other configuration options
   stories: [
     "../stories/**/*.mdx",
     "../stories/**/*.stories.@(js|jsx|mjs|ts|tsx)",
@@ -16,5 +27,13 @@ const config = {
   docs: {
     autodocs: "tag",
   },
-};
-export default config;
+
+  // Using custom config vite for storybook
+  async viteFinal(baseConfig) {
+    const { config: userConfig } = await loadConfigFromFile(
+      path.resolve(__dirname, "../vite-storybook.config.ts")
+    )
+
+    return mergeConfig(baseConfig, userConfig)
+  }
+}
